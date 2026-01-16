@@ -56,9 +56,10 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
+
   @Override
   public void periodic() {
-    
+    swerveDrive.updateOdometry();
   }
 
   @Override
