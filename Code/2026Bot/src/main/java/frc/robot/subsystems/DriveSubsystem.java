@@ -64,6 +64,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    
+    swerveDrive.updateOdometry();
   }
 }
