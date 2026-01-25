@@ -25,7 +25,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem() {
      try {
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(4.5));
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542));
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     } catch (Exception e) {
       throw new RuntimeException(e);
