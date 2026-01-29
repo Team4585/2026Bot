@@ -4,16 +4,19 @@
 
 package frc.robot.subsystems;
 
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMath;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -49,6 +52,18 @@ public class DriveSubsystem extends SubsystemBase {
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
     return run(() -> {
       swerveDrive.driveFieldOriented(velocity.get());
+    });
+  }
+
+  public Command bumpRotation(DoubleSupplier TranslationX, DoubleSupplier TranslationY){
+    Rotation2d currentRotation = swerveDrive.getOdometryHeading();
+    double currentAngle = currentRotation.getDegrees();
+
+    double target = RobotMath.calculateClosestDiagonal(currentAngle);
+
+    ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+    return run(()->{
+      driveFieldOriented(()->rtargetSpeeds);
     });
   }
 
