@@ -39,7 +39,7 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    m_driverController.leftBumper().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
+    m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
                                                                 () -> m_driverController.getLeftX() * -1));
   }
 

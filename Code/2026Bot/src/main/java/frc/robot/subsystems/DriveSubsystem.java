@@ -116,13 +116,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public Command bumpRotation(DoubleSupplier TranslationX, DoubleSupplier TranslationY){
-    Rotation2d currentRotation = swerveDrive.getOdometryHeading();
+    return run(()->{
+      Rotation2d currentRotation = swerveDrive.getOdometryHeading();
     double currentAngle = currentRotation.getDegrees();
 
     double target = RobotMath.calculateClosestDiagonal(currentAngle);
 
     ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
-    return run(()->{
+    
       driveFieldOriented(()->rtargetSpeeds);
     });
   }
