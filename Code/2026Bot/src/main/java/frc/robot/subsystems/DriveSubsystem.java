@@ -139,6 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     swerveDrive.updateOdometry();
+    swerveDrive.synchronizeModuleEncoders();
 
     Orientation3d robotOrientation = new Orientation3d(swerveDrive.getGyroRotation3d(), new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(swerveDrive.getYaw().getDegrees())));
 
