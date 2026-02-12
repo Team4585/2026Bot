@@ -20,12 +20,12 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
     SwerveInputStream driveStream = SwerveInputStream.of(driveSubsystem.getSwerveDrive(),
-                                                                () -> m_driverController.getLeftY() * -1,
+                                                                () -> m_driverController.getLeftY() * 1,
                                                                 () -> m_driverController.getLeftX() * -1)
                                                             .withControllerRotationAxis(m_driverController::getRightX)
                                                             .deadband(OperatorConstants.deadband)
                                                             .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
+                                                            .allianceRelativeControl(false);
 
 
   public RobotContainer() {
@@ -39,8 +39,8 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
-                                                                () -> m_driverController.getLeftX() * -1));
+    // m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
+    //                                                             () -> m_driverController.getLeftX() * -1));
   }
 
   public Command getAutonomousCommand() {

@@ -54,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    swerveDrive.synchronizeModuleEncoders();
 
     try{
    ll4 = new Limelight(Constants.VisionConstants.ll4_hostname);
@@ -111,7 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
     return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
+      swerveDrive.drive(velocity.get());
     });
   }
 
@@ -139,7 +140,6 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     swerveDrive.updateOdometry();
-    swerveDrive.synchronizeModuleEncoders();
 
     Orientation3d robotOrientation = new Orientation3d(swerveDrive.getGyroRotation3d(), new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(swerveDrive.getYaw().getDegrees())));
 
