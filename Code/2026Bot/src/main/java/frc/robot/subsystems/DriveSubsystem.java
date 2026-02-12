@@ -12,6 +12,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -48,14 +49,17 @@ public class DriveSubsystem extends SubsystemBase {
   boolean ll3a_attached;
 
   public DriveSubsystem() {
-     try {
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542));
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+     try {
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542), new Pose2d(4,4, Rotation2d.kZero));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     swerveDrive.synchronizeModuleEncoders();
+    swerveDrive.setCosineCompensator(false);
+    swerveDrive.useExternalFeedbackSensor();
 
+    /*
     try{
    ll4 = new Limelight(Constants.VisionConstants.ll4_hostname);
       ll4.getSettings()
@@ -91,6 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
       System.out.println("Limelight 3A not found");
       ll3a_attached = false;
     }
+      */
   }
 
     public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX){
@@ -112,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
     return run(() -> {
-      swerveDrive.drive(velocity.get());
+      swerveDrive.driveFieldOriented(velocity.get());
     });
   }
 
@@ -139,7 +144,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    swerveDrive.updateOdometry();
 
     Orientation3d robotOrientation = new Orientation3d(swerveDrive.getGyroRotation3d(), new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(swerveDrive.getYaw().getDegrees())));
 
@@ -187,6 +191,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    swerveDrive.updateOdometry();
+    // swerveDrive.updateOdometry();
   }
 }

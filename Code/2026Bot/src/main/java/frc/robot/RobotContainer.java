@@ -25,7 +25,7 @@ public class RobotContainer {
                                                             .withControllerRotationAxis(m_driverController::getRightX)
                                                             .deadband(OperatorConstants.deadband)
                                                             .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(false);
+                                                            .allianceRelativeControl(true);
 
 
   public RobotContainer() {
@@ -39,8 +39,8 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    // m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
-    //                                                             () -> m_driverController.getLeftX() * -1));
+    m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
+                                                                () -> m_driverController.getLeftX() * -1));
   }
 
   public Command getAutonomousCommand() {
