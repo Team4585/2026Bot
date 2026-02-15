@@ -59,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
     swerveDrive.setCosineCompensator(false);
     swerveDrive.useExternalFeedbackSensor();
 
-    /*
+    
     try{
    ll4 = new Limelight(Constants.VisionConstants.ll4_hostname);
       ll4.getSettings()
@@ -95,7 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
       System.out.println("Limelight 3A not found");
       ll3a_attached = false;
     }
-      */
+      
   }
 
     public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX){
