@@ -1,4 +1,7 @@
 package frc.robot;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -26,5 +29,9 @@ public final class Constants {
   public static class FieldConstants{
     public static final Translation3d rHub_POSE = new Translation3d(11.938, 4.034536, 1.5748);
     public static final Translation3d bHub_POSE = new Translation3d(4.5974, 4.034536, 1.5748);
+  }
+
+  public static class PIDControllers{
+    public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
   }
 }

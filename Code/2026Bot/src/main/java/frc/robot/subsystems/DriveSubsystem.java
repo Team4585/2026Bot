@@ -10,6 +10,10 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,8 +52,11 @@ public class DriveSubsystem extends SubsystemBase {
   boolean ll4_attached;
   boolean ll3_attached;
   boolean ll3a_attached;
+  boolean odometryOff;
+  RobotConfig autoConfig; 
 
   public DriveSubsystem() {
+    //swerve drive
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
      try {
       swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542), new Pose2d(4,4, Rotation2d.kZero));
@@ -56,10 +64,8 @@ public class DriveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
     swerveDrive.synchronizeModuleEncoders();
-    swerveDrive.setCosineCompensator(false);
-    swerveDrive.useExternalFeedbackSensor();
-
-    
+   
+    //vision
     try{
    ll4 = new Limelight(Constants.VisionConstants.ll4_hostname);
       ll4.getSettings()
@@ -96,6 +102,37 @@ public class DriveSubsystem extends SubsystemBase {
       ll3a_attached = false;
     }
       
+    if(ll4_attached || ll3_attached || ll3a_attached){
+      swerveDrive.stopOdometryThread();
+      odometryOff = true;
+    }
+
+    else{odometryOff = false;}
+
+    //pathplanner
+    try{
+      autoConfig = RobotConfig.fromGUISettings();
+    }
+    catch(Exception e){
+      e.printStackTrace();
+    }
+
+    AutoBuilder.configure(
+    this::getPose, 
+    this::resetPose, 
+    this::getSpeeds, 
+    (speeds, feedforwards) -> driveRobotOriented(speeds), 
+    Constants.PIDControllers.autoPID, 
+    autoConfig, 
+    () -> {
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            }, 
+    this
+    );
   }
 
     public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX){
@@ -113,6 +150,24 @@ public class DriveSubsystem extends SubsystemBase {
 
   public SwerveDrive getSwerveDrive(){
     return swerveDrive;
+  }
+
+  public Pose2d getPose(){
+    return swerveDrive.getPose();
+  }
+
+  public void resetPose(Pose2d target){
+    swerveDrive.resetOdometry(target);
+  }
+
+  public ChassisSpeeds getSpeeds(){
+    return swerveDrive.getRobotVelocity();
+  }
+
+  public Command driveRobotOriented(ChassisSpeeds speeds){
+    return run(() -> {
+      swerveDrive.drive(speeds);
+    });
   }
 
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
@@ -141,9 +196,11 @@ public class DriveSubsystem extends SubsystemBase {
      return false;
   }
 
-
   @Override
   public void periodic() {
+    if(odometryOff){
+      swerveDrive.updateOdometry();
+    }
 
     Orientation3d robotOrientation = new Orientation3d(swerveDrive.getGyroRotation3d(), new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(swerveDrive.getYaw().getDegrees())));
 
