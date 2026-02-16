@@ -13,18 +13,20 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final String ll3_hostname = "llfour";
-    public static final String ll4_hostname = "llthree";
+    public static final String ll2_hostname = "lltwo";
+    public static final String ll4_hostname = "llfour";
     public static final String ll3a_hostname = "llthreea";
 
-    public static final Pose3d ll3_offset = new Pose3d(
-      new Translation3d(0.2425, -0.0302, 0.0605), 
+    public static final Pose3d ll2_offset = new Pose3d(
+      new Translation3d(0.2408, 0.0561, 0.0285), 
       new Rotation3d(0.0, Math.toRadians(-35), 0.0));
     public static final Pose3d ll4_offset = new Pose3d(
       new Translation3d(0.2728, 0.0051, 0.0710), 
       new Rotation3d(0.0, Math.toRadians(-45.0), 0.0));
     public static final Pose3d ll3a_offset = Pose3d.kZero;
   }
+
+  
 
   public static class FieldConstants{
     public static final Translation3d rHub_POSE = new Translation3d(11.938, 4.034536, 1.5748);
