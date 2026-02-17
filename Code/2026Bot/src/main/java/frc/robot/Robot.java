@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private String cachedGameData = "";
+  private boolean hubActive = true;
+  private int currentShift = 0;
 
   private final RobotContainer m_robotContainer;
 
@@ -26,6 +33,47 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+  }
+
+  private void updateShiftStatus() {
+    double matchTime = DriverStation.getMatchTime();
+
+    if (DriverStation.isAutonomous() || matchTime > 130) {
+        currentShift = 0;
+        hubActive = true;
+        return;
+    }
+
+    if (matchTime <= 30 && matchTime > 0) {
+        currentShift = 5; 
+        hubActive = true;
+        return;
+    }
+
+    if (matchTime > 105)      currentShift = 1; 
+    else if (matchTime > 80)  currentShift = 2; 
+    else if (matchTime > 55)  currentShift = 3; 
+    else                      currentShift = 4; 
+
+    if (cachedGameData.isEmpty()) {
+        hubActive = true;
+        return;
+    }
+
+    Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+        char inactiveFirst = cachedGameData.charAt(0); 
+        
+        boolean weGoInactiveFirst = 
+            (alliance.get() == DriverStation.Alliance.Red && inactiveFirst == 'R') ||
+            (alliance.get() == DriverStation.Alliance.Blue && inactiveFirst == 'B');
+
+        if (currentShift == 1 || currentShift == 3) {
+            hubActive = !weGoInactiveFirst;
+        } else {
+            hubActive = weGoInactiveFirst;
+        }
+    }
   }
 
   /**
@@ -42,6 +90,14 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    if (cachedGameData.isEmpty()) {
+      cachedGameData = DriverStation.getGameSpecificMessage();
+    }
+
+    updateShiftStatus();
+  
+    SmartDashboard.putBoolean("Is the hub active?", hubActive);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -75,6 +131,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    
   }
 
   /** This function is called periodically during operator control. */

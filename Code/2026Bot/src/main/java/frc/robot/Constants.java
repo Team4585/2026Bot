@@ -2,6 +2,7 @@ package frc.robot;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -9,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
     public static final double deadband = 0.05;
   }
 
@@ -26,8 +28,6 @@ public final class Constants {
     public static final Pose3d ll3a_offset = Pose3d.kZero;
   }
 
-  
-
   public static class FieldConstants{
     public static final Translation3d rHub_POSE = new Translation3d(11.938, 4.034536, 1.5748);
     public static final Translation3d bHub_POSE = new Translation3d(4.5974, 4.034536, 1.5748);
@@ -35,5 +35,11 @@ public final class Constants {
 
   public static class PIDControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
+    public static final PIDController shooterPID = new PIDController(0.1, 0, 0);
+    public static final double shooterkV = 0.5;
+  }
+
+  public static class CANids{
+    public static final int shooterMotor1ID = 9;
   }
 }
