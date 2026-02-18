@@ -1,11 +1,13 @@
 package frc.robot;
+
+
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.controller.ArmFeedforward;
+
 
 public final class Constants {
   public static class OperatorConstants {
@@ -33,13 +35,24 @@ public final class Constants {
     public static final Translation3d bHub_POSE = new Translation3d(4.5974, 4.034536, 1.5748);
   }
 
-  public static class PIDControllers{
+  public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
-    public static final PIDController shooterPID = new PIDController(0.1, 0, 0);
-    public static final double shooterkV = 0.5;
+    public static class intakePivotPID{
+      public static final double kP = 0.3;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.25, 0.02, 0);
   }
 
   public static class CANids{
-    public static final int shooterMotor1ID = 9;
+    public static final int intakePivotMotorID = 9;
+  }
+
+  public static class SetpointConstants{
+    public static class IntakePivotSetpoints{
+      public static double UpPos = 0;
+      public static double DownPos = 80;
+    }
   }
 }

@@ -122,7 +122,7 @@ public class DriveSubsystem extends SubsystemBase {
     this::resetPose, 
     this::getSpeeds, 
     (speeds, feedforwards) -> driveRobotOriented(speeds), 
-    Constants.PIDControllers.autoPID, 
+    Constants.PIDFFControllers.autoPID, 
     autoConfig, 
     () -> {
               var alliance = DriverStation.getAlliance();
