@@ -21,6 +21,9 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakePivotSusbsystem extends SubsystemBase{
+
+    private SparkMax sparkMax = new SparkMax(Constants.CANids.intakePivotMotorID, MotorType.kBrushless);
+    
     SmartMotorControllerConfig pivotMotorConfig = new SmartMotorControllerConfig()
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withClosedLoopController(Constants.PIDFFControllers.intakePivotPID.kP,Constants.PIDFFControllers.intakePivotPID.kI, Constants.PIDFFControllers.intakePivotPID.kD, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
@@ -31,9 +34,12 @@ public class IntakePivotSusbsystem extends SubsystemBase{
         .withIdleMode(MotorMode.BRAKE)
         .withStatorCurrentLimit(Amps.of(40))
         .withClosedLoopRampRate(Seconds.of(0.25))
-        .withOpenLoopRampRate(Seconds.of(0.25));
-
-        private SparkMax sparkMax = new SparkMax(Constants.CANids.intakePivotMotorID, MotorType.kBrushless);
+        .withOpenLoopRampRate(Seconds.of(0.25))
+        .withExternalEncoder(sparkMax.getAbsoluteEncoder())
+        .withExternalEncoderGearing(1)
+        .withExternalEncoderZeroOffset(Degrees.of(Constants.OffsetConstants.intakePivotEncoderOffset))
+        .withUseExternalFeedbackEncoder(true)
+        .withExternalEncoderInverted(false);
 
         private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNeoVortex(1), pivotMotorConfig);
 

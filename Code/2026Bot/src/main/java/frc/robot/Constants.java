@@ -47,6 +47,7 @@ public final class Constants {
 
   public static class CANids{
     public static final int intakePivotMotorID = 9;
+    public static final int intakeMotorID = 10;
   }
 
   public static class SetpointConstants{
@@ -54,5 +55,14 @@ public final class Constants {
       public static double UpPos = 0;
       public static double DownPos = 80;
     }
+  }
+
+  public static class OffsetConstants{
+    public static double intakePivotEncoderOffset = 0;
+  }
+
+  public static class SpeedConstants{
+    public static double intakeSpeed = -0.8;
+    public static double outtakeSpeed = 0.8;
   }
 }
