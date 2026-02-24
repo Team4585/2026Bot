@@ -109,6 +109,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     else{odometryOff = false;}
 
+   Limelight.setupPortForwardingUSB(0);
+
     //pathplanner
     try{
       autoConfig = RobotConfig.fromGUISettings();
