@@ -181,7 +181,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     double target = RobotMath.calculateClosestDiagonal(currentAngle);
 
-    ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+    ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
     
       swerveDrive.driveFieldOriented(rtargetSpeeds);
     });
@@ -190,6 +190,14 @@ public class DriveSubsystem extends SubsystemBase {
    public Command brake(){
     return run(()->{
       swerveDrive.lockPose();
+    });
+  }
+
+  public Command pointToHeading(DoubleSupplier TranslationX, DoubleSupplier TranslationY){
+    return run(()->{
+      double targetHeading = Math.atan2(TranslationY.getAsDouble(), TranslationX.getAsDouble());
+      ChassisSpeeds ptargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationY.getAsDouble(), TranslationX.getAsDouble(), -Math.cos(targetHeading), -Math.sin(targetHeading), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+      swerveDrive.driveFieldOriented(ptargetSpeeds);
     });
   }
 
@@ -234,16 +242,6 @@ public class DriveSubsystem extends SubsystemBase {
       int ll3aPipeline = (int) lla3a_results.get().pipelineID;
       if (ll3aPipeline == 0) {
           visionEstimate_ll3a = ll3aEstimator.getAlliancePoseEstimate();
-      }
-      if (ll3aPipeline == 1) {
-        double[] pythonOut= edu.wpi.first.networktables.NetworkTableInstance.getDefault()
-        .getTable(Constants.VisionConstants.ll3a_hostname)
-        .getEntry("llpython")
-        .getDoubleArray(new double[0]);
-
-        int estimatedBallCount = (pythonOut != null && pythonOut.length > 0) ? (int) pythonOut[0] : 0;
-
-        edu.wpi.first.wpilibj.smartdashboard.SmartDashboard.putNumber("Vision/Total Balls", estimatedBallCount);
       }
   }}
 

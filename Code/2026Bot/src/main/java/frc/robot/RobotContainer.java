@@ -46,6 +46,8 @@ public class RobotContainer {
 
     m_driverController.b().whileTrue(driveSubsystem.brake());
   
+    m_driverController.y().whileTrue(driveSubsystem.pointToHeading(() -> m_driverController.getLeftY() * -1,
+                                                                () -> m_driverController.getLeftX() * -1));
   }
 
   public Command getAutonomousCommand() {
