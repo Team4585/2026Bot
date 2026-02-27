@@ -64,6 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
     swerveDrive.synchronizeModuleEncoders();
+    swerveDrive.setModuleStateOptimization(true);
    
     //vision
     try{
