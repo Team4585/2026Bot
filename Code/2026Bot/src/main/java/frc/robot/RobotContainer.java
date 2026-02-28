@@ -22,9 +22,9 @@ public class RobotContainer {
   //     new CommandXboxController(Constants.OperatorConstants.kOperatorControllerPort);
 
     SwerveInputStream driveStream = SwerveInputStream.of(driveSubsystem.getSwerveDrive(),
-                                                                () -> m_driverController.getLeftY() * 1,
-                                                                () -> m_driverController.getLeftX() * 1)
-                                                            .withControllerRotationAxis(m_driverController::getRightX)
+                                                                () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
+                                                                () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX())
+                                                            .withControllerRotationAxis(()->m_driverController.getRightX() * -1)
                                                             .deadband(OperatorConstants.deadband)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -41,13 +41,13 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    m_driverController.a().whileTrue(driveSubsystem.bumpRotation(() -> m_driverController.getLeftY() * -1,
-                                                                () -> m_driverController.getLeftX() * -1));
+    m_driverController.a().whileTrue(driveSubsystem.bumpRotation( () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
+                                                                () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
 
     m_driverController.b().whileTrue(driveSubsystem.brake());
   
-    m_driverController.y().whileTrue(driveSubsystem.pointToHeading(() -> m_driverController.getLeftY() * -1,
-                                                                () -> m_driverController.getLeftX() * -1));
+    m_driverController.y().whileTrue(driveSubsystem.pointToHeading( () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
+                                                                () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
   }
 
   public Command getAutonomousCommand() {

@@ -175,14 +175,14 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
-  public Command bumpRotation(DoubleSupplier TranslationX, DoubleSupplier TranslationY){
+  public Command bumpRotation(DoubleSupplier TranslationY, DoubleSupplier TranslationX){
     return run(()->{
       Rotation2d currentRotation = swerveDrive.getOdometryHeading();
     double currentAngle = currentRotation.getDegrees();
 
     double target = RobotMath.calculateClosestDiagonal(currentAngle);
 
-    ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+    ChassisSpeeds rtargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(-TranslationY.getAsDouble()*swerveDrive.getMaximumChassisVelocity(), -TranslationX.getAsDouble()*swerveDrive.getMaximumChassisVelocity(),Math.cos(Math.toRadians(target)), Math.sin(Math.toRadians(target)), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
     
       swerveDrive.driveFieldOriented(rtargetSpeeds);
     });
@@ -194,10 +194,10 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
-  public Command pointToHeading(DoubleSupplier TranslationX, DoubleSupplier TranslationY){
+  public Command pointToHeading(DoubleSupplier TranslationY, DoubleSupplier TranslationX){
     return run(()->{
       double targetHeading = Math.atan2(TranslationY.getAsDouble(), TranslationX.getAsDouble());
-      ChassisSpeeds ptargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationY.getAsDouble(), TranslationX.getAsDouble(), -Math.cos(targetHeading), -Math.sin(targetHeading), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+      ChassisSpeeds ptargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(-TranslationY.getAsDouble(), -TranslationX.getAsDouble(), -Math.cos(targetHeading), -Math.sin(targetHeading), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
       swerveDrive.driveFieldOriented(ptargetSpeeds);
     });
   }
