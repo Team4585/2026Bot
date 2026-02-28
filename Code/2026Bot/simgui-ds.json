@@ -4,6 +4,11 @@
       "visible": true
     }
   },
+  "Keyboard 1 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -36,9 +41,6 @@
       "povConfig": [
         {
           "key0": 328,
-          "key135": 323,
-          "key180": 322,
-          "key225": 321,
           "key270": 324,
           "key315": 327,
           "key45": 329,
@@ -50,23 +52,35 @@
     {
       "axisConfig": [
         {
-          "decKey": 74,
-          "incKey": 76
+          "decKey": 74
         },
         {
-          "decKey": 73,
           "incKey": 75
         }
       ],
       "axisCount": 2,
-      "buttonCount": 4,
+      "buttonCount": 12,
       "buttonKeys": [
         77,
         44,
         46,
-        47
+        47,
+        -1,
+        -1,
+        -1,
+        323,
+        322,
+        321,
+        320,
+        76
       ],
-      "povCount": 0
+      "povConfig": [
+        {
+          "key0": 85,
+          "key180": 73
+        }
+      ],
+      "povCount": 1
     },
     {
       "axisConfig": [
@@ -100,6 +114,9 @@
   "robotJoysticks": [
     {
       "guid": "Keyboard0"
+    },
+    {
+      "guid": "Keyboard1"
     }
   ]
 }

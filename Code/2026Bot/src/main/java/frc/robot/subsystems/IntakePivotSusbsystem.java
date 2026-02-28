@@ -6,7 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import yams.gearing.GearBox;
@@ -39,7 +39,8 @@ public class IntakePivotSusbsystem extends SubsystemBase{
         .withExternalEncoderGearing(1)
         .withExternalEncoderZeroOffset(Degrees.of(Constants.OffsetConstants.intakePivotEncoderOffset))
         .withUseExternalFeedbackEncoder(true)
-        .withExternalEncoderInverted(false);
+        .withExternalEncoderInverted(false)
+        .withSubsystem(this);
 
         private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNeoVortex(1), pivotMotorConfig);
 
@@ -53,8 +54,8 @@ public class IntakePivotSusbsystem extends SubsystemBase{
 
         private Arm intakePivot= new Arm(intakePivotConfig);
 
-        public void setAngleSetpoint(Angle angle) { 
-            intakePivot.setMechanismPositionSetpoint(angle); 
+        public Command setAngleSetpoint(double angle) { 
+            return run(()->{intakePivot.setMechanismPositionSetpoint(Degrees.of(angle));}); 
         }
 
         @Override
