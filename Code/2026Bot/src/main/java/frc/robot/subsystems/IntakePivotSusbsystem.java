@@ -32,7 +32,7 @@ public class IntakePivotSusbsystem extends SubsystemBase{
         .withTelemetry("Intake Pivot Motor", TelemetryVerbosity.HIGH)
         .withMotorInverted(false)
         .withIdleMode(MotorMode.BRAKE)
-        .withStatorCurrentLimit(Amps.of(40))
+        .withStatorCurrentLimit(Amps.of(20))
         .withClosedLoopRampRate(Seconds.of(0.25))
         .withOpenLoopRampRate(Seconds.of(0.25))
         .withExternalEncoder(sparkMax.getAbsoluteEncoder())

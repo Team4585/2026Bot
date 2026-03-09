@@ -17,13 +17,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  // private final IntakePivotSusbsystem intakePivotSubsystem = new IntakePivotSusbsystem();
-  // private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final IntakePivotSusbsystem intakePivotSubsystem = new IntakePivotSusbsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  // private final CommandXboxController m_operatorController = 
-  //    new CommandXboxController(Constants.OperatorConstants.kOperatorControllerPort);
+   private final CommandXboxController m_operatorController = 
+      new CommandXboxController(Constants.OperatorConstants.kOperatorControllerPort);
 
     SwerveInputStream driveStream = SwerveInputStream.of(driveSubsystem.getSwerveDrive(),
                                                                 () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
@@ -55,10 +55,10 @@ public class RobotContainer {
                                                                 () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
     //operator bindings
 
-    // m_operatorController.pov(0).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.UpPos));    
-    // m_operatorController.pov(180).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.DownPos));                                                    
+    m_operatorController.pov(0).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.UpPos));    
+    m_operatorController.pov(180).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.DownPos));                                                    
   
-    // m_operatorController.rightTrigger().whileTrue(intakeSubsystem.intake());
+    m_operatorController.leftTrigger().whileTrue(intakeSubsystem.intake());
   }
 
   public Command getAutonomousCommand() {

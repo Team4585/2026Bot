@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 
 public final class Constants {
@@ -43,11 +44,22 @@ public final class Constants {
       public static final double kD = 0;
     }
     public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.25, 0.02, 0);
+
+    public static class shooterPID{
+      public static final double kP = 5;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+
+    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.075, 0.08, 13.53);
   }
 
   public static class CANids{
     public static final int intakePivotMotorID = 9;
     public static final int intakeMotorID = 10;
+    public static final int indexerMotorID = 11;
+    public static final int shooterMotor1ID = 12;
+    public static final int shooterMotor2ID = 13;
   }
 
   public static class SetpointConstants{
@@ -64,5 +76,7 @@ public final class Constants {
   public static class SpeedConstants{
     public static double intakeSpeed = -0.8;
     public static double outtakeSpeed = 0.8;
+    public static double indexSpeed = 0.3;
+    public static double indexPushSpeed = -0.1;
   }
 }

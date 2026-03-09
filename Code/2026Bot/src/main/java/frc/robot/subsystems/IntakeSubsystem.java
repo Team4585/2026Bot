@@ -5,9 +5,10 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class IntakeSubsystem {
+public class IntakeSubsystem extends SubsystemBase{
     private SparkMax motor = new SparkMax(Constants.CANids.intakeMotorID, MotorType.kBrushless);
 
     public Command intake(){
