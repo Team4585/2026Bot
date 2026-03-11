@@ -22,4 +22,10 @@ public class IntakeSubsystem extends SubsystemBase{
             motor.set(Constants.SpeedConstants.outtakeSpeed);
         });
     }
+
+    public Command stop(){
+        return Commands.run(()->{
+            motor.set(0);
+        }, this);
+    }
 }

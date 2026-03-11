@@ -6,8 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakePivotSusbsystem;
+import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import swervelib.SwerveInputStream;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -17,8 +18,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
   private final DriveSubsystem driveSubsystem = new DriveSubsystem();
-  private final IntakePivotSusbsystem intakePivotSubsystem = new IntakePivotSusbsystem();
+  private final IntakePivotSubsystem intakePivotSubsystem = new IntakePivotSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -53,12 +55,16 @@ public class RobotContainer {
   
     m_driverController.y().whileTrue(driveSubsystem.pointToHeading( () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
                                                                 () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
+    
     //operator bindings
-
-    m_operatorController.pov(0).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.UpPos));    
-    m_operatorController.pov(180).onTrue(intakePivotSubsystem.setAngleSetpoint(Constants.SetpointConstants.IntakePivotSetpoints.DownPos));                                                    
+    m_operatorController.pov(0).onTrue(intakePivotSubsystem.pivotDown());    
+    m_operatorController.pov(180).onTrue(intakePivotSubsystem.pivotUp());                                                      
   
     m_operatorController.leftTrigger().whileTrue(intakeSubsystem.intake());
+    intakeSubsystem.setDefaultCommand(intakeSubsystem.stop());
+
+    shooterSubsystem.setDefaultCommand(shooterSubsystem.setVelocity(2000));
+
   }
 
   public Command getAutonomousCommand() {

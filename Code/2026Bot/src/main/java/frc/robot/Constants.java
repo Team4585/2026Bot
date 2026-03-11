@@ -1,11 +1,14 @@
 package frc.robot;
 
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
@@ -39,19 +42,19 @@ public final class Constants {
   public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
     public static class intakePivotPID{
-      public static final double kP = 0.3;
+      public static final double kP = 4.5;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = 0.5;
     }
-    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.25, 0.02, 0);
+    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.15, 0, 100, 0);
 
     public static class shooterPID{
-      public static final double kP = 5;
+      public static final double kP = 0.1;
       public static final double kI = 0;
       public static final double kD = 0;
     }
 
-    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.075, 0.08, 13.53);
+    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.75, 0.8, 13.53);
   }
 
   public static class CANids{
@@ -64,13 +67,13 @@ public final class Constants {
 
   public static class SetpointConstants{
     public static class IntakePivotSetpoints{
-      public static double UpPos = 0;
-      public static double DownPos = 80;
+      public static Angle UpPos = Degrees.of(80);
+      public static Angle DownPos = Degrees.of(0);
     }
   }
 
   public static class OffsetConstants{
-    public static double intakePivotEncoderOffset = 0;
+    public static double intakePivotEncoderOffset = 0.61019194;
   }
 
   public static class SpeedConstants{
@@ -79,4 +82,10 @@ public final class Constants {
     public static double indexSpeed = 0.3;
     public static double indexPushSpeed = -0.1;
   }
+
+  //in pounds
+  public static double shooterUpductedWeight = 3.75;
+  public static double shooterAxleWeight = 2.2;
+
+  public static double shooterReadyThreshold = 50;
 }
