@@ -74,6 +74,8 @@ public final class Constants {
 
   public static class OffsetConstants{
     public static double intakePivotEncoderOffset = 0.61019194;
+    public static double shooterXOffset = 0.1;
+    public static double shooterYOffset = 0.0;
   }
 
   public static class SpeedConstants{
