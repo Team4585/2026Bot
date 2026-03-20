@@ -1,4 +1,9 @@
 {
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "Keyboard 1 Settings": {
     "window": {
       "visible": true
@@ -8,6 +13,7 @@
     {
       "axisConfig": [
         {
+          "decKey": 65,
           "incKey": 68
         },
         {
@@ -59,14 +65,14 @@
         50,
         51,
         52,
+        53,
+        54,
+        55,
+        56,
+        57,
         -1,
-        -1,
-        -1,
-        323,
-        322,
-        321,
-        320,
-        76
+        44,
+        46
       ],
       "povConfig": [
         {

@@ -37,7 +37,7 @@ public class IntakePivotSubsystem extends SubsystemBase{
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
       .withGearing(60)
-      .withMotorInverted(true)
+      .withMotorInverted(false)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(20))
       .withExternalEncoder(encoder)

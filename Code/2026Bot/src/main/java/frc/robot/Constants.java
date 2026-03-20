@@ -8,6 +8,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -63,6 +64,7 @@ public final class Constants {
     public static final int indexerMotorID = 11;
     public static final int shooterMotor1ID = 12;
     public static final int shooterMotor2ID = 13;
+    public static final int candleID = 14;
   }
 
   public static class SetpointConstants{
@@ -73,7 +75,7 @@ public final class Constants {
   }
 
   public static class OffsetConstants{
-    public static double intakePivotEncoderOffset = 0.61019194;
+    public static double intakePivotEncoderOffset = 0.042;
     public static double shooterXOffset = 0.1;
     public static double shooterYOffset = 0.0;
   }
@@ -90,4 +92,18 @@ public final class Constants {
   public static double shooterAxleWeight = 2.2;
 
   public static double shooterReadyThreshold = 50;
+
+  public static class ShooterMap{
+    public static InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+    static{
+      shooterMap.put(0.0, 0.0);
+      shooterMap.put(1.0, 1600.0);
+      shooterMap.put(2.1, 1600.0);
+      shooterMap.put(3.0, 1785.0);
+      shooterMap.put(4.0, 2010.0);
+      shooterMap.put(5.0,2225.0);
+      shooterMap.put(6.0, 2438.0);
+    }
+
+  }
 }

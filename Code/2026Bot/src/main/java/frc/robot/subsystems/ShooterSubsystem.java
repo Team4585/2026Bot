@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import com.revrobotics.spark.SparkMax;
 
 import frc.robot.Constants;
+import frc.robot.RobotMath;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -54,18 +55,33 @@ public class ShooterSubsystem extends SubsystemBase{
 
     }
 
-    public Command setVelocity(double speed){
+    public Command setVelocityCommand(double speed){
       return runOnce(()->{shooter.setMechanismVelocitySetpoint(RPM.of(speed));});
     }
 
+    public void setVelocity(double speed){
+      shooter.setMechanismVelocitySetpoint(RPM.of(speed));
+    }
+
     public boolean ready(){
-      return (shooter.getMechanismSetpointVelocity().get().magnitude() - shooter.getSpeed().magnitude() <= Constants.shooterReadyThreshold);
+      return (shooter.getSpeed().magnitude()*60 >= 
+       (shooter.getMechanismSetpointVelocity().get().magnitude() - Constants.shooterReadyThreshold));
+    }
+
+    public Command defaultCommand(){
+      return run(()->{
+        if(RobotMath.activeLater()){
+          shooter.setMechanismVelocitySetpoint(RPM.of(1500));
+        }
+        else{
+          shooter.setMechanismVelocitySetpoint(RPM.of(100));
+        }
+      });
     }
 
   @Override
   public void periodic() {
     shooter.updateTelemetry();
-          System.out.println(motorConfig.getFollowers());
     }
 
   @Override
