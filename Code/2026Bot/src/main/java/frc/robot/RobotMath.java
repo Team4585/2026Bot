@@ -1,10 +1,15 @@
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import limelight.networktables.PoseEstimate;
 import edu.wpi.first.wpilibj.Timer;
 
 public class RobotMath {
@@ -20,13 +25,27 @@ public class RobotMath {
         Translation2d HubPosition;
         if(DriverStation.getAlliance().isPresent()){
         HubPosition =  DriverStation.getAlliance().get() == Alliance.Red ? Constants.FieldConstants.rHub_POSE.toTranslation2d() : Constants.FieldConstants.bHub_POSE.toTranslation2d();}
-        else{HubPosition = Constants.FieldConstants.rHub_POSE.toTranslation2d();}
+        else{HubPosition = Constants.FieldConstants.bHub_POSE.toTranslation2d();}
         return HubPosition;
     }
 
      public static double DistanceToHub(Pose2d currentPose){
         Translation2d HubPosition = getHubPosition();
         double staticDistance = Math.sqrt(Math.pow((HubPosition.getX() - currentPose.getX()), 2) + Math.pow((HubPosition.getY() - currentPose.getY()), 2));
+        return staticDistance;
+    }
+
+    public static Translation2d getOutpostPosition(){
+        Translation2d OutpostPosition;
+        if(DriverStation.getAlliance().isPresent()){
+        OutpostPosition =  DriverStation.getAlliance().get() == Alliance.Red ? Constants.FieldConstants.rOutpost_POSE.toTranslation2d() : Constants.FieldConstants.bOutpost_POSE.toTranslation2d();}
+        else{OutpostPosition = Constants.FieldConstants.bOutpost_POSE.toTranslation2d();}
+        return OutpostPosition;
+    }
+
+     public static double DistanceToOutpost(Pose2d currentPose){
+        Translation2d OutpostPosition = getHubPosition();
+        double staticDistance = Math.sqrt(Math.pow((OutpostPosition.getX() - currentPose.getX()), 2) + Math.pow((OutpostPosition.getY() - currentPose.getY()), 2));
         return staticDistance;
     }
 
@@ -79,5 +98,13 @@ public class RobotMath {
         else                 shift = 4; 
 
         return (shift == 1 || shift == 3) ? !weGoInactiveFirst : weGoInactiveFirst;
+    }
+
+    public static Matrix<N3, N1> getDynamicStdDevs(PoseEstimate estimate, double baseSD){
+        double dist = estimate.avgTagDist;
+        double tagCountMultiplier = estimate.tagCount > 1 ? 1 : 0.5;
+        double multiplier = (1.0 + 0.1 * Math.pow(dist, 2))*tagCountMultiplier;
+
+        return VecBuilder.fill(baseSD * multiplier, baseSD * multiplier, 9999999);
     }
 }

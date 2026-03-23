@@ -6,6 +6,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static edu.wpi.first.units.Units.Amps;
@@ -69,14 +70,14 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public Command defaultCommand(){
-      return run(()->{
-        if(RobotMath.activeLater()){
+      return Commands.run(()->{
+        if(RobotMath.activeLater() || RobotMath.hubActive()){
           shooter.setMechanismVelocitySetpoint(RPM.of(1500));
         }
         else{
           shooter.setMechanismVelocitySetpoint(RPM.of(100));
         }
-      });
+      }, this);
     }
 
   @Override

@@ -37,7 +37,7 @@ public class IntakePivotSubsystem extends SubsystemBase{
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
       .withGearing(60)
-      .withMotorInverted(false)
+      .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(20))
       .withExternalEncoder(encoder)
@@ -48,7 +48,8 @@ public class IntakePivotSubsystem extends SubsystemBase{
 
 
   private ArmConfig pivotConfig = new ArmConfig(motorController)
-      .withHardLimit(Degrees.of(-100), Degrees.of(100))
+      .withHardLimit(Degrees.of(10), Degrees.of(160))
+      .withSoftLimits(Degrees.of(15), Degrees.of(150))
       .withLength(Feet.of(0.8333))
       .withMass(Pounds.of(10))
       .withTelemetry("IntakePivot", TelemetryVerbosity.HIGH);
@@ -61,11 +62,11 @@ public class IntakePivotSubsystem extends SubsystemBase{
   }
 
   public Command pivotUp(){
-    return run(() -> motorController.setPosition(Constants.SetpointConstants.IntakePivotSetpoints.UpPos));
+    return runOnce(() -> motorController.setPosition(Constants.SetpointConstants.IntakePivotSetpoints.UpPos));
   }
 
   public Command pivotDown(){
-    return run(() -> motorController.setPosition(Constants.SetpointConstants.IntakePivotSetpoints.DownPos));
+    return runOnce(() -> motorController.setPosition(Constants.SetpointConstants.IntakePivotSetpoints.DownPos));
   }
 
   @Override

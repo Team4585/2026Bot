@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMath;
@@ -37,6 +40,7 @@ import limelight.networktables.LimelightPoseEstimator;
 import limelight.networktables.Orientation3d;
 import limelight.networktables.PoseEstimate;
 import limelight.networktables.LimelightPoseEstimator.EstimationMode;
+import limelight.networktables.LimelightSettings.ImuMode;
 import limelight.networktables.LimelightSettings.LEDMode;
 import frc.robot.Constants;
 
@@ -59,12 +63,14 @@ public class DriveSubsystem extends SubsystemBase {
     //swerve drive
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
      try {
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542), new Pose2d(4,4, Rotation2d.kZero));
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(14.44542));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
     swerveDrive.synchronizeModuleEncoders();
     swerveDrive.setModuleStateOptimization(true);
+
+    if(RobotBase.isSimulation()) swerveDrive.resetOdometry(new Pose2d(1, 2.5, new Rotation2d(18)));
    
     //vision
     try{
@@ -87,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
    ll2_attached = true;
     }
     catch(Exception e){
-      System.out.println("Limelight 3 not found");
+      System.out.println("Limelight 2 not found");
       ll2_attached = false;
     }
 
@@ -111,8 +117,9 @@ public class DriveSubsystem extends SubsystemBase {
     else{odometryOff = false;}
 
    Limelight.setupPortForwardingUSB(0);
+  }
 
-    //pathplanner
+  public void setupPathplanner(){
     try{
       autoConfig = RobotConfig.fromGUISettings();
     }
@@ -163,15 +170,56 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   //drive related commands
-  public Command driveRobotOriented(ChassisSpeeds speeds){
-    return run(() -> {
+  public void driveRobotOriented(ChassisSpeeds speeds){
       swerveDrive.drive(speeds);
-    });
   }
 
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
     return run(() -> {
       swerveDrive.driveFieldOriented(velocity.get());
+    });
+  }
+
+  public Command driveToPose(Pose2d pose){
+    PathConstraints constraints = new PathConstraints(
+        swerveDrive.getMaximumChassisVelocity(), 4.0,
+        swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
+
+    return AutoBuilder.pathfindToPose(
+        pose,
+        constraints,
+        edu.wpi.first.units.Units.MetersPerSecond.of(0) 
+                                    );
+  }
+
+  public Command pathFindAndFollow(PathPlannerPath path){
+    PathConstraints constraints = new PathConstraints(
+        3.0, 4.0,
+        swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
+
+
+    return AutoBuilder.pathfindThenFollowPath(
+        path,
+        constraints);
+  }
+
+  public Command aimToPose(Pose2d pose){
+    return run(() -> {
+        Rotation2d currentRotation = getPose().getRotation();
+
+        double rotationSpeed = swerveDrive.swerveController.getTargetSpeeds(
+            0.0, 0.0, 
+            pose.getRotation().getRadians(), 
+            currentRotation.getRadians(),
+            swerveDrive.getMaximumChassisVelocity()
+        ).omegaRadiansPerSecond;
+
+        // 3. Drive with 0 translation and the calculated rotation
+        this.driveRobotOriented(new ChassisSpeeds(0, 0, rotationSpeed));
+
+    }).until(() -> {
+        double error = Math.abs(getPose().getRotation().minus(pose.getRotation()).getDegrees());
+        return error < 2.0;
     });
   }
 
@@ -205,7 +253,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 //other
   private boolean validateMeasurement(PoseEstimate estimate){
-     if (estimate.avgTagDist < 4 && estimate.tagCount > 0 && estimate.getMinTagAmbiguity() < 0.3){
+     if (estimate.avgTagDist < 3 && estimate.tagCount > 0 && estimate.getMinTagAmbiguity() < 0.3){
       return true;
      }
      return false;
@@ -215,8 +263,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetPose(Pose2d target){
     swerveDrive.resetOdometry(target);
   }
-
-
 
   @Override
   public void periodic() {
@@ -236,37 +282,36 @@ public class DriveSubsystem extends SubsystemBase {
 
    if(ll4_attached){visionEstimate_ll4 = ll4Estimator.getAlliancePoseEstimate();}
    if(ll2_attached){visionEstimate_ll2 = ll2Estimator.getAlliancePoseEstimate();}
+  if(ll3a_attached){visionEstimate_ll3a = ll3aEstimator.getAlliancePoseEstimate();}
 
-   if(ll3a_attached){
-  var lla3a_results = ll3a.getLatestResults();
-  if (lla3a_results.isPresent()) {
-      int ll3aPipeline = (int) lla3a_results.get().pipelineID;
-      if (ll3aPipeline == 0) {
-          visionEstimate_ll3a = ll3aEstimator.getAlliancePoseEstimate();
-      }
-  }}
-
+  if(ll4_attached){
+  if (edu.wpi.first.wpilibj.DriverStation.isDisabled()) {
+        ll4.getSettings().withImuMode(ImuMode.SyncInternalImu).save();
+    } else {
+        ll4.getSettings().withImuMode(ImuMode.InternalImuExternalAssist).save();
+    }
+  }
     if(visionEstimate_ll4.isPresent()){
       if(validateMeasurement(visionEstimate_ll4.get())){
-        swerveDrive.addVisionMeasurement(visionEstimate_ll4.get().pose.toPose2d(), visionEstimate_ll4.get().timestampSeconds);
+        swerveDrive.addVisionMeasurement(visionEstimate_ll4.get().pose.toPose2d(), visionEstimate_ll4.get().timestampSeconds, RobotMath.getDynamicStdDevs(visionEstimate_ll4.get(), 0.3));
       }
     }
 
     if(visionEstimate_ll2.isPresent()){
       if(validateMeasurement(visionEstimate_ll2.get())){
-        swerveDrive.addVisionMeasurement(visionEstimate_ll2.get().pose.toPose2d(), visionEstimate_ll2.get().timestampSeconds);
+        swerveDrive.addVisionMeasurement(visionEstimate_ll2.get().pose.toPose2d(), visionEstimate_ll2.get().timestampSeconds, RobotMath.getDynamicStdDevs(visionEstimate_ll2.get(), 1.2));
       }
     }
 
     if(visionEstimate_ll3a.isPresent()){
       if(validateMeasurement(visionEstimate_ll3a.get())){
-        swerveDrive.addVisionMeasurement(visionEstimate_ll3a.get().pose.toPose2d(), visionEstimate_ll3a.get().timestampSeconds);
+        swerveDrive.addVisionMeasurement(visionEstimate_ll3a.get().pose.toPose2d(), visionEstimate_ll3a.get().timestampSeconds, RobotMath.getDynamicStdDevs(visionEstimate_ll3a.get(), 0.4));
       }
     }
   }
 
   @Override
   public void simulationPeriodic() {
-    // swerveDrive.updateOdometry();
+
   }
 }

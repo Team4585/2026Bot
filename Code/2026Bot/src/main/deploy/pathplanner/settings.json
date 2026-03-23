@@ -18,7 +18,7 @@
   "driveMotorType": "NEO",
   "driveCurrentLimit": 40.0,
   "wheelCOF": 1.19,
-  "flModuleX": 0.3429,
+  "flModuleX": 0.343,
   "flModuleY": 0.3429,
   "frModuleX": 0.3429,
   "frModuleY": -0.3429,

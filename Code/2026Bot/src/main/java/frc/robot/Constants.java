@@ -27,7 +27,7 @@ public final class Constants {
     public static final String ll3a_hostname = "llta";
 
     public static final Pose3d ll2_offset = new Pose3d(
-      new Translation3d(0.2408, 0.0561, 0.0285), 
+      new Translation3d(-0.135, 0.287, 0.058), 
       new Rotation3d(0.0, Math.toRadians(-35), 0.0));
     public static final Pose3d ll4_offset = new Pose3d(
       new Translation3d(0.2728, 0.0051, 0.0710), 
@@ -38,16 +38,19 @@ public final class Constants {
   public static class FieldConstants{
     public static final Translation3d rHub_POSE = new Translation3d(11.938, 4.034536, 1.5748);
     public static final Translation3d bHub_POSE = new Translation3d(4.5974, 4.034536, 1.5748);
+
+    public static final Translation3d rOutpost_POSE = new Translation3d(15.75, 7.25, 0);
+    public static final Translation3d bOutpost_POSE = new Translation3d(0.75, 0.75, 0);
   }
 
   public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
     public static class intakePivotPID{
-      public static final double kP = 4.5;
+      public static final double kP = 0.8;
       public static final double kI = 0;
-      public static final double kD = 0.5;
+      public static final double kD = 0.3;
     }
-    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.15, 0, 100, 0);
+    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.25, 0, 0.25);
 
     public static class shooterPID{
       public static final double kP = 0.1;
@@ -69,8 +72,8 @@ public final class Constants {
 
   public static class SetpointConstants{
     public static class IntakePivotSetpoints{
-      public static Angle UpPos = Degrees.of(80);
-      public static Angle DownPos = Degrees.of(0);
+      public static Angle UpPos = Degrees.of(25);
+      public static Angle DownPos = Degrees.of(137);
     }
   }
 

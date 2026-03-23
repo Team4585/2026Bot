@@ -9,6 +9,11 @@
       "visible": true
     }
   },
+  "System Joysticks": {
+    "window": {
+      "enabled": false
+    }
+  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -24,7 +29,9 @@
           "decayRate": 0.0,
           "keyRate": 0.009999999776482582
         },
-        {},
+        {
+          "incKey": 80
+        },
         {
           "decKey": 69,
           "incKey": 82
@@ -51,17 +58,28 @@
     },
     {
       "axisConfig": [
-        {
-          "decKey": 74
-        },
+        {},
         {
           "incKey": 75
+        },
+        {
+          "incKey": 320
+        },
+        {
+          "incKey": 70
+        },
+        {
+          "incKey": 321
+        },
+        {
+          "decKey": 78,
+          "incKey": 77
         }
       ],
-      "axisCount": 2,
+      "axisCount": 6,
       "buttonCount": 12,
       "buttonKeys": [
-        49,
+        92,
         50,
         51,
         52,
