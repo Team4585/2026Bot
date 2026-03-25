@@ -23,20 +23,20 @@ public class LEDSubsystem extends SubsystemBase{
     CANdleConfiguration config = new CANdleConfiguration();
     LEDConfigs ledConfig = new LEDConfigs();
     
-    private final StrobeAnimation disconnectBlink = new StrobeAnimation(8, 67);
-    private final SolidColor disabledGreen = new SolidColor(8, 67).withColor(new RGBWColor(0, 255, 0));
+    private final StrobeAnimation disconnectBlink = new StrobeAnimation(0, 127);
+    private final SolidColor disabledGreen = new SolidColor(0, 127).withColor(new RGBWColor(0, 255, 0));
     
-    private final StrobeAnimation policeRed = new StrobeAnimation(8, 37);
-    private final StrobeAnimation policeBlue = new StrobeAnimation(38, 67);
+    private final StrobeAnimation policeRed = new StrobeAnimation(0, 67);
+    private final StrobeAnimation policeBlue = new StrobeAnimation(67, 127);
 
-    private final FireAnimation fireAnimation = new FireAnimation(8, 67);
+    private final FireAnimation fireAnimation = new FireAnimation(0, 127);
 
-    private final ColorFlowAnimation hubActiveAnimation = new ColorFlowAnimation(8, 67);
-    private final SolidColor hubInactiveAnimation = new SolidColor(8, 67).withColor(new RGBWColor(50, 50, 50));;
+    private final ColorFlowAnimation hubActiveAnimation = new ColorFlowAnimation(0, 127);
+    private final SolidColor hubInactiveAnimation = new SolidColor(0, 127).withColor(new RGBWColor(50, 50, 50));;
     
     public LEDSubsystem(){
         ledConfig.StripType = StripTypeValue.GRB;
-        ledConfig.BrightnessScalar = 1;
+        ledConfig.BrightnessScalar = 0.5;
 
         candle.getConfigurator().apply(config.withLED(ledConfig));
         
