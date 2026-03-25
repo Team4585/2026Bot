@@ -72,7 +72,7 @@ public class ShooterSubsystem extends SubsystemBase{
     public Command defaultCommand(){
       return Commands.run(()->{
         if(RobotMath.activeLater() || RobotMath.hubActive()){
-          shooter.setMechanismVelocitySetpoint(RPM.of(1500));
+          shooter.setMechanismVelocitySetpoint(RPM.of(500));
         }
         else{
           shooter.setMechanismVelocitySetpoint(RPM.of(100));

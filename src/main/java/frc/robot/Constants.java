@@ -46,19 +46,19 @@ public final class Constants {
   public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
     public static class intakePivotPID{
-      public static final double kP = 0.8;
+      public static final double kP = 0.001;
       public static final double kI = 0;
-      public static final double kD = 0.3;
+      public static final double kD = 0.001;
     }
-    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.25, 0, 0.25);
+    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(1.3, 0.8, 0.25);
 
     public static class shooterPID{
-      public static final double kP = 0.1;
+      public static final double kP = 0.05;
       public static final double kI = 0;
       public static final double kD = 0;
     }
 
-    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.75, 0.8, 13.53);
+    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.75, 0.8, 10);
   }
 
   public static class CANids{
@@ -72,19 +72,19 @@ public final class Constants {
 
   public static class SetpointConstants{
     public static class IntakePivotSetpoints{
-      public static Angle UpPos = Degrees.of(25);
-      public static Angle DownPos = Degrees.of(137);
+      public static Angle UpPos = Degrees.of(62);
+      public static Angle DownPos = Degrees.of(335);
     }
   }
 
   public static class OffsetConstants{
-    public static double intakePivotEncoderOffset = 0.042;
+    public static double intakePivotEncoderOffset = 0.21;
     public static double shooterXOffset = 0.1;
     public static double shooterYOffset = 0.0;
   }
 
   public static class SpeedConstants{
-    public static double intakeSpeed = -0.8;
+    public static double intakeSpeed = -0.6;
     public static double outtakeSpeed = 0.8;
     public static double indexSpeed = 0.3;
     public static double indexPushSpeed = -0.1;

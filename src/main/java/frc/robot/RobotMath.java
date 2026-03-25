@@ -35,6 +35,26 @@ public class RobotMath {
         return staticDistance;
     }
 
+    public static double getShiftTime(){
+         double matchTime = edu.wpi.first.wpilibj.DriverStation.getMatchTime();
+
+         if(DriverStation.isAutonomous()){
+            return matchTime -140;
+         }
+
+         if(matchTime >130 && matchTime <= 140) return matchTime - 130;
+    
+    if (edu.wpi.first.wpilibj.DriverStation.isTeleop() && matchTime <= 130 && matchTime > 30) {
+        double timeSinceEndgameStart = matchTime - 30.0;
+        double timeInShift = timeSinceEndgameStart % 25.0;
+
+        return (timeInShift == 0) ? 25.0 : timeInShift;
+    }
+    if(matchTime <=30 && matchTime>= 0) return matchTime;
+    
+    return -1.0; 
+    }
+
     public static Translation2d getOutpostPosition(){
         Translation2d OutpostPosition;
         if(DriverStation.getAlliance().isPresent()){
@@ -57,6 +77,9 @@ public class RobotMath {
     public static boolean hubActive() {
         double matchTime = Timer.getMatchTime();
         String gameData = DriverStation.getGameSpecificMessage();
+        if(gameData.isEmpty()){
+            gameData = "B";
+        }
         
         boolean weGoInactiveFirst = false;
         var alliance = DriverStation.getAlliance();
@@ -97,7 +120,11 @@ public class RobotMath {
         else if (time > 55)  shift = 3; 
         else                 shift = 4; 
 
-        return (shift == 1 || shift == 3) ? !weGoInactiveFirst : weGoInactiveFirst;
+        if (weGoInactiveFirst) {
+        return (shift == 2 || shift == 4);
+    } else {
+        return (shift == 1 || shift == 3);
+    }
     }
 
     public static Matrix<N3, N1> getDynamicStdDevs(PoseEstimate estimate, double baseSD){
