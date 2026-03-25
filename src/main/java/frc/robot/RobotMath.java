@@ -44,7 +44,7 @@ public class RobotMath {
     }
 
      public static double DistanceToOutpost(Pose2d currentPose){
-        Translation2d OutpostPosition = getHubPosition();
+        Translation2d OutpostPosition = getOutpostPosition();
         double staticDistance = Math.sqrt(Math.pow((OutpostPosition.getX() - currentPose.getX()), 2) + Math.pow((OutpostPosition.getY() - currentPose.getY()), 2));
         return staticDistance;
     }
