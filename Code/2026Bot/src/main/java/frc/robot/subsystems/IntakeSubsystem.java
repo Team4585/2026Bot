@@ -14,13 +14,13 @@ public class IntakeSubsystem extends SubsystemBase{
     public Command intake(){
         return Commands.run(()->{
             motor.set(Constants.SpeedConstants.intakeSpeed);
-        });
+        }, this);
     }
 
     public Command outtake(){
         return Commands.run(()->{
             motor.set(Constants.SpeedConstants.outtakeSpeed);
-        });
+        }, this);
     }
 
     public Command stop(){
