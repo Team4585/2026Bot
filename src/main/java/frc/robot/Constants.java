@@ -22,9 +22,9 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final String ll2_hostname = "lltwo";
-    public static final String ll4_hostname = "llfour";
-    public static final String ll3a_hostname = "llta";
+    public static final String ll2_hostname = "limelight-lltwo";
+    public static final String ll4_hostname = "limelight-llfour";
+    public static final String ll3a_hostname = "limelight-llta";
 
     public static final Pose3d ll2_offset = new Pose3d(
       new Translation3d(-0.135, 0.287, 0.058), 
