@@ -7,6 +7,8 @@ import static edu.wpi.first.units.Units.Pounds;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -37,19 +39,20 @@ public class IntakePivotSubsystem extends SubsystemBase{
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
       .withGearing(60)
-      .withMotorInverted(false)
+      .withMotorInverted(true)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(20))
       .withExternalEncoder(encoder)
       .withExternalEncoderZeroOffset(encoderOffset) 
-      .withUseExternalFeedbackEncoder(true);
+      .withUseExternalFeedbackEncoder(true)
+      .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)));
 
   private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNEO(1), motorConfig);
 
 
   private ArmConfig pivotConfig = new ArmConfig(motorController)
-      .withHardLimit(Degrees.of(55), Degrees.of(350))
-      .withSoftLimits(Degrees.of(56), Degrees.of(349))
+      // .withHardLimit(Degrees.of(55), Degrees.of(350))
+      // .withSoftLimits(Degrees.of(56), Degrees.of(349))
       .withLength(Feet.of(0.8333))
       .withMass(Pounds.of(10))
       .withTelemetry("IntakePivot", TelemetryVerbosity.HIGH);

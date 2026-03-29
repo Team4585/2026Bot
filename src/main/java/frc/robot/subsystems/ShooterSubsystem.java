@@ -40,6 +40,7 @@ public class ShooterSubsystem extends SubsystemBase{
         .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
         .withGearing(0.5)
         .withIdleMode(MotorMode.COAST)
+        .withMotorInverted(true)
         .withStatorCurrentLimit(Amps.of(80))
         .withClosedLoopRampRate(Seconds.of(0.25))
         .withOpenLoopRampRate(Seconds.of(0.25));
@@ -72,10 +73,10 @@ public class ShooterSubsystem extends SubsystemBase{
     public Command defaultCommand(){
       return Commands.run(()->{
         if(RobotMath.activeLater() || RobotMath.hubActive()){
-          shooter.setMechanismVelocitySetpoint(RPM.of(500));
+          shooter.setMechanismVelocitySetpoint(RPM.of(-500));
         }
         else{
-          shooter.setMechanismVelocitySetpoint(RPM.of(100));
+          shooter.setMechanismVelocitySetpoint(RPM.of(-100));
         }
       }, this);
     }

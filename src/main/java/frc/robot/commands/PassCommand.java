@@ -9,15 +9,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class PassCommand extends Command{
     public final ShooterSubsystem shooterSubsystem;
-    public final IndexerSubsystem indexerSubsystem;
-    public final DriveSubsystem driveSubsystem;
 
-    public PassCommand(ShooterSubsystem sSub, IndexerSubsystem iSub, DriveSubsystem dSub){
+    public PassCommand(ShooterSubsystem sSub){
         shooterSubsystem = sSub;
-        indexerSubsystem = iSub;
-        driveSubsystem = dSub;
-
-        addRequirements(shooterSubsystem, indexerSubsystem);
+        
+        addRequirements(shooterSubsystem);
     }
 
     @Override
@@ -27,11 +23,9 @@ public class PassCommand extends Command{
 
     @Override
     public void execute(){
-        double targetDist = RobotMath.DistanceToOutpost(driveSubsystem.getPose());
-        double targetRPM = Constants.ShooterMap.shooterMap.get(targetDist);
+        double targetRPM = -5500;
 
         shooterSubsystem.setVelocity(targetRPM);
-        indexerSubsystem.enable();
     }
 
     @Override
@@ -39,6 +33,6 @@ public class PassCommand extends Command{
 
     @Override
     public void end(boolean interrupted){
-        indexerSubsystem.stop();
+
     }
 }
