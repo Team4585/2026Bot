@@ -48,13 +48,10 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDrive swerveDrive;
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   Limelight ll4 ;
-  Limelight ll2 ;
   Limelight ll3a;
   LimelightPoseEstimator ll4Estimator;
-  LimelightPoseEstimator ll2Estimator;
   LimelightPoseEstimator ll3aEstimator;
   boolean ll4_attached;
-  boolean ll2_attached;
   boolean ll3a_attached;
   boolean odometryOff;
   RobotConfig autoConfig; 
@@ -69,6 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
     swerveDrive.synchronizeModuleEncoders();
     swerveDrive.setModuleStateOptimization(true);
+    swerveDrive.setCosineCompensator(true);
+    swerveDrive.setHeadingCorrection(false);
 
     if(RobotBase.isSimulation()) swerveDrive.resetOdometry(new Pose2d(1, 2.5, new Rotation2d(18)));
    
@@ -86,18 +85,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     try{
-   ll2 = new Limelight(Constants.VisionConstants.ll2_hostname);
-   ll2.getSettings()
-   .withLimelightLEDMode(LEDMode.PipelineControl).withCameraOffset(Constants.VisionConstants.ll2_offset).save();
-   ll2Estimator = new LimelightPoseEstimator(ll2, EstimationMode.MEGATAG2);
-   ll2_attached = true;
-    }
-    catch(Exception e){
-      System.out.println("Limelight 2 not found");
-      ll2_attached = false;
-    }
-
-    try{
    ll3a = new Limelight(Constants.VisionConstants.ll3a_hostname);
    ll3a.getSettings()
    .withLimelightLEDMode(LEDMode.PipelineControl).withCameraOffset(Constants.VisionConstants.ll3a_offset).save();
@@ -109,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
       ll3a_attached = false;
     }
       
-    if(ll4_attached || ll2_attached || ll3a_attached){
+    if(ll4_attached || ll3a_attached){
       swerveDrive.stopOdometryThread();
       odometryOff = true;
     }
@@ -273,15 +260,12 @@ public class DriveSubsystem extends SubsystemBase {
     Orientation3d robotOrientation = new Orientation3d(swerveDrive.getGyroRotation3d(), new AngularVelocity3d(DegreesPerSecond.of(0), DegreesPerSecond.of(0), DegreesPerSecond.of(swerveDrive.getYaw().getDegrees())));
 
     if(ll4_attached)ll4.getSettings().withRobotOrientation(robotOrientation).save();
-    if(ll2_attached)ll2.getSettings().withRobotOrientation(robotOrientation).save();
     if(ll3a_attached)ll3a.getSettings().withRobotOrientation(robotOrientation).save();
 
   Optional<PoseEstimate> visionEstimate_ll4 = Optional.empty();
-  Optional<PoseEstimate> visionEstimate_ll2 = Optional.empty();
   Optional<PoseEstimate> visionEstimate_ll3a = Optional.empty();
 
    if(ll4_attached){visionEstimate_ll4 = ll4Estimator.getAlliancePoseEstimate();}
-   if(ll2_attached){visionEstimate_ll2 = ll2Estimator.getAlliancePoseEstimate();}
   if(ll3a_attached){visionEstimate_ll3a = ll3aEstimator.getAlliancePoseEstimate();}
 
   if(ll4_attached){
@@ -294,12 +278,6 @@ public class DriveSubsystem extends SubsystemBase {
     if(visionEstimate_ll4.isPresent()){
       if(validateMeasurement(visionEstimate_ll4.get())){
         swerveDrive.addVisionMeasurement(visionEstimate_ll4.get().pose.toPose2d(), visionEstimate_ll4.get().timestampSeconds, RobotMath.getDynamicStdDevs(visionEstimate_ll4.get(), 0.3));
-      }
-    }
-
-    if(visionEstimate_ll2.isPresent()){
-      if(validateMeasurement(visionEstimate_ll2.get())){
-        swerveDrive.addVisionMeasurement(visionEstimate_ll2.get().pose.toPose2d(), visionEstimate_ll2.get().timestampSeconds, RobotMath.getDynamicStdDevs(visionEstimate_ll2.get(), 1.2));
       }
     }
 

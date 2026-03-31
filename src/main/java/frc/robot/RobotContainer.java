@@ -22,7 +22,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -106,13 +105,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driveStream.aim(new Pose2d(RobotMath.getHubPosition(), Rotation2d.kZero))
-      .aimWhile(m_driverController.rightTrigger())
-      .scaleTranslation(0.5);
 
     Command driveFieldOrientedAnglularVelocity = driveSubsystem.driveFieldOriented(driveStream);
 
     driveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+
+    m_driverController.rightTrigger().whileTrue(driveSubsystem.aimToPose(new Pose2d(
+                driveSubsystem.getPose().getTranslation(),
+                RobotMath.AbsoluteAngleToHub(driveSubsystem.getPose()))));
 
     m_driverController.a().whileTrue(driveSubsystem.bumpRotation( () -> 0.75 * m_driverController.getLeftY() * m_driverController.getLeftY() * m_driverController.getLeftY() + 0.25 * m_driverController.getLeftY(),
                                                                 () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
