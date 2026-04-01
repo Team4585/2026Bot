@@ -42,19 +42,19 @@ public final class Constants {
   public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
     public static class intakePivotPID{
-      public static final double kP = 0.001;
+      public static final double kP = 3.2;
       public static final double kI = 0;
-      public static final double kD = 0.001;
+      public static final double kD = 0.8;
     }
-    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(1.3, 0.8, 0.25);
+    public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.06, 0.18, 0);
 
     public static class shooterPID{
-      public static final double kP = 0.05;
+      public static final double kP = 0.06;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = 0.12;
     }
 
-    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.75, 0.8, 10);
+    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.67, 0.03, 0.05);
   }
 
   public static class CANids{
@@ -68,8 +68,8 @@ public final class Constants {
 
   public static class SetpointConstants{
     public static class IntakePivotSetpoints{
-      public static Angle UpPos = Degrees.of(62);
-      public static Angle DownPos = Degrees.of(335);
+      public static Angle UpPos = Degrees.of(-35);
+      public static Angle DownPos = Degrees.of(74);
     }
   }
 

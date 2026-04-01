@@ -76,7 +76,7 @@ public class DriveSubsystem extends SubsystemBase {
    ll4 = new Limelight(Constants.VisionConstants.ll4_hostname);
       ll4.getSettings()
    .withLimelightLEDMode(LEDMode.PipelineControl).withCameraOffset(Constants.VisionConstants.ll4_offset).save();
-   ll4Estimator = new LimelightPoseEstimator(ll4, EstimationMode.MEGATAG2);
+   ll4Estimator = new LimelightPoseEstimator(ll4, EstimationMode.MEGATAG1);
    ll4_attached = true;
     }
     catch(Exception e){
@@ -88,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
    ll3a = new Limelight(Constants.VisionConstants.ll3a_hostname);
    ll3a.getSettings()
    .withLimelightLEDMode(LEDMode.PipelineControl).withCameraOffset(Constants.VisionConstants.ll3a_offset).save();
-   ll3aEstimator = new LimelightPoseEstimator(ll3a, EstimationMode.MEGATAG2);
+   ll3aEstimator = new LimelightPoseEstimator(ll3a, EstimationMode.MEGATAG1);
    ll3a_attached = true;
     }
     catch(Exception e){
@@ -201,7 +201,6 @@ public class DriveSubsystem extends SubsystemBase {
             swerveDrive.getMaximumChassisVelocity()
         ).omegaRadiansPerSecond;
 
-        // 3. Drive with 0 translation and the calculated rotation
         this.driveRobotOriented(new ChassisSpeeds(0, 0, rotationSpeed));
 
     }).until(() -> {
