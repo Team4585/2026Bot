@@ -7,11 +7,11 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.PassCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.subsystems.BeltFloorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -35,7 +35,7 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final IndexerSubsystem indexerSubsystem = new IndexerSubsystem();
-  private final LEDSubsystem ledSubsystem = new LEDSubsystem();
+  private final BeltFloorSubsystem beltFloorSubsystem = new BeltFloorSubsystem();
 
   public SendableChooser<Command> autoChooser;
 
@@ -70,7 +70,7 @@ public class RobotContainer {
             ));
         }).withTimeout(Seconds.of(2))
      );
-      NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooterSubsystem, indexerSubsystem, driveSubsystem, ()->0.0));
+      NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem, ()->0.0));
       NamedCommands.registerCommand("Intake Down", intakePivotSubsystem.pivotDown().withTimeout(Seconds.of(0.01)));
       NamedCommands.registerCommand("Intake Start", intakeSubsystem.intake().withTimeout(Seconds.of(5)));
       NamedCommands.registerCommand("Intake Stop", intakeSubsystem.stop().withTimeout(Seconds.of(0.01)));
@@ -92,7 +92,7 @@ public class RobotContainer {
         path  = PathPlannerPath.fromPathFile("Neutral Sweep");
        }
         catch(Exception e){path = null;}
-          return driveSubsystem.pathFindAndFollow(path).withTimeout(Seconds.of(10));
+          return driveSubsystem.pathFindAndFollow(path).withTimeout(Seconds.of(15));
         }
       ));
 
@@ -131,8 +131,8 @@ public class RobotContainer {
 
     shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultCommand());
     indexerSubsystem.setDefaultCommand(Commands.run(()->{indexerSubsystem.push();}, indexerSubsystem));
-    m_operatorController.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, driveSubsystem, ()->offset));
-    m_operatorController.a().whileTrue(new PassCommand(shooterSubsystem, indexerSubsystem, driveSubsystem));
+    m_operatorController.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem, ()->offset));
+    m_operatorController.a().whileTrue(new PassCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem));
 
     new Trigger(() -> m_operatorController.getRightY() < -0.5)
       .whileTrue(Commands.run(() -> {
@@ -143,11 +143,9 @@ public class RobotContainer {
       .whileTrue(Commands.run(() -> {
         offset += 0.2; 
       }));
+      m_operatorController.rightStick().onTrue(Commands.run(()->{offset = 0;}));
 
-      ledSubsystem.setDefaultCommand(ledSubsystem.defaultAnimation());
-      SmartDashboard.putData("Play Police", ledSubsystem.policeLights());
-      SmartDashboard.putData("Play Fire", ledSubsystem.fire());
-      SmartDashboard.putData("Go Back to Default", ledSubsystem.defaultAnimation());
+      beltFloorSubsystem.setDefaultCommand(Commands.run(()->{beltFloorSubsystem.stop();}, beltFloorSubsystem));
   }
 
   public Command getAutonomousCommand() {

@@ -69,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
     swerveDrive.setCosineCompensator(true);
     swerveDrive.setHeadingCorrection(false);
 
-    if(RobotBase.isSimulation()) swerveDrive.resetOdometry(new Pose2d(1, 2.5, new Rotation2d(18)));
+    if(RobotBase.isSimulation()) swerveDrive.resetOdometry(new Pose2d(4, 4, new Rotation2d(0)));
    
     //vision
     try{

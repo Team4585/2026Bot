@@ -3,21 +3,24 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotMath;
+import frc.robot.subsystems.BeltFloorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class PassCommand extends Command{
-    public final ShooterSubsystem shooterSubsystem;
+     public final ShooterSubsystem shooterSubsystem;
     public final IndexerSubsystem indexerSubsystem;
     public final DriveSubsystem driveSubsystem;
+    public final BeltFloorSubsystem beltFloorSubsystem; 
 
-    public PassCommand(ShooterSubsystem sSub, IndexerSubsystem iSub, DriveSubsystem dSub){
+    public PassCommand(ShooterSubsystem sSub, IndexerSubsystem iSub, BeltFloorSubsystem bSub, DriveSubsystem dSub){
         shooterSubsystem = sSub;
         indexerSubsystem = iSub;
         driveSubsystem = dSub;
+        beltFloorSubsystem = bSub;
 
-        addRequirements(shooterSubsystem, indexerSubsystem);
+        addRequirements(shooterSubsystem, indexerSubsystem, beltFloorSubsystem);
     }
 
     @Override
@@ -32,6 +35,7 @@ public class PassCommand extends Command{
 
         shooterSubsystem.setVelocity(targetRPM);
         indexerSubsystem.enable();
+        beltFloorSubsystem.enable();
     }
 
     @Override
@@ -40,5 +44,6 @@ public class PassCommand extends Command{
     @Override
     public void end(boolean interrupted){
         indexerSubsystem.stop();
+        beltFloorSubsystem.stop();
     }
 }

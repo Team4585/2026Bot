@@ -47,12 +47,12 @@ public class IntakePivotSubsystem extends SubsystemBase{
       .withUseExternalFeedbackEncoder(true)
       .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)));
 
-  private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNEO(1), motorConfig);
+  private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNeoVortex(1), motorConfig);
 
 
   private ArmConfig pivotConfig = new ArmConfig(motorController)
-      // .withHardLimit(Degrees.of(55), Degrees.of(350))
-      // .withSoftLimits(Degrees.of(56), Degrees.of(349))
+      .withHardLimit(Degrees.of(-50), Degrees.of(70))
+      .withSoftLimits(Degrees.of(-40), Degrees.of(60))
       .withLength(Feet.of(0.8333))
       .withMass(Pounds.of(10));
 

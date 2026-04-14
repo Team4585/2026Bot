@@ -64,6 +64,7 @@ public final class Constants {
     public static final int shooterMotor1ID = 12;
     public static final int shooterMotor2ID = 13;
     public static final int candleID = 14;
+    public static final int beltFloorID = 15;
   }
 
   public static class SetpointConstants{
@@ -74,7 +75,7 @@ public final class Constants {
   }
 
   public static class OffsetConstants{
-    public static double intakePivotEncoderOffset = 0.21;
+    public static double intakePivotEncoderOffset = 0.65;
     public static double shooterXOffset = 0.1;
     public static double shooterYOffset = 0.0;
   }
@@ -84,11 +85,11 @@ public final class Constants {
     public static double outtakeSpeed = 0.8;
     public static double indexSpeed = 0.3;
     public static double indexPushSpeed = -0.1;
+    public static double beltFloorSpeed = 0.6;
   }
 
   //in pounds
-  public static double shooterUpductedWeight = 3.75;
-  public static double shooterAxleWeight = 2.2;
+  public static double shooterWeight = 6.4;
 
   public static double shooterReadyThreshold = 50;
 

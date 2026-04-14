@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,8 +15,6 @@ import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Seconds;
 
-import com.revrobotics.spark.SparkMax;
-
 import frc.robot.Constants;
 import frc.robot.RobotMath;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -26,30 +24,31 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class ShooterSubsystem extends SubsystemBase{
-    private SparkMax motor1 = new SparkMax(Constants.CANids.shooterMotor1ID, MotorType.kBrushless);
+    private TalonFX motor1 = new TalonFX(Constants.CANids.shooterMotor1ID);
     private SmartMotorControllerConfig motorConfig = new SmartMotorControllerConfig(this)
         .withControlMode(ControlMode.CLOSED_LOOP)
         .withClosedLoopController(Constants.PIDFFControllers.shooterPID.kP, Constants.PIDFFControllers.shooterPID.kI, Constants.PIDFFControllers.shooterPID.kD)
         .withFeedforward(Constants.PIDFFControllers.shooterFF)
         .withSimClosedLoopController(0.1, 0, 0.01)
         .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.12, 0.01))
-        .withFollowers(Pair.of(new SparkMax(Constants.CANids.shooterMotor2ID, MotorType.kBrushless), true))
+        .withFollowers(Pair.of(new TalonFX(Constants.CANids.shooterMotor2ID), true))
         .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
-        .withGearing(0.5)
+        .withGearing(1)
         .withIdleMode(MotorMode.COAST)
-        .withStatorCurrentLimit(Amps.of(80))
+        .withStatorCurrentLimit(Amps.of(150))
+        .withSupplyCurrentLimit(Amps.of(40))
         .withClosedLoopRampRate(Seconds.of(0.25))
         .withOpenLoopRampRate(Seconds.of(0.25));
 
-    private SmartMotorController sparkMax = new SparkWrapper(motor1, DCMotor.getNeoVortex(2), motorConfig);
+    private SmartMotorController talonFX = new TalonFXWrapper(motor1, DCMotor.getKrakenX60(2), motorConfig);
   
-    private final FlyWheelConfig shooterConfig = new FlyWheelConfig(sparkMax)
+    private final FlyWheelConfig shooterConfig = new FlyWheelConfig(talonFX)
     .withDiameter(Inches.of(4))
-    .withUpperSoftLimit(RPM.of(8500))
-    .withMass(Pounds.of(Constants.shooterAxleWeight/4 + Constants.shooterUpductedWeight));
+    .withUpperSoftLimit(RPM.of(6000))
+    .withMass(Pounds.of(Constants.shooterWeight));
     private FlyWheel shooter = new FlyWheel(shooterConfig);
 
     public ShooterSubsystem(){
@@ -72,10 +71,10 @@ public class ShooterSubsystem extends SubsystemBase{
     public Command defaultCommand(){
       return Commands.run(()->{
         if(RobotMath.activeLater() || RobotMath.hubActive()){
-          shooter.setMechanismVelocitySetpoint(RPM.of(500));
+          shooter.setMechanismVelocitySetpoint(RPM.of(1000));
         }
         else{
-          shooter.setMechanismVelocitySetpoint(RPM.of(100));
+          shooter.setMechanismVelocitySetpoint(RPM.of(500));
         }
       }, this);
     }
