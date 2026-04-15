@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.RobotMath;
 import frc.robot.subsystems.BeltFloorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -30,8 +29,7 @@ public class PassCommand extends Command{
 
     @Override
     public void execute(){
-        double targetDist = RobotMath.DistanceToOutpost(driveSubsystem.getPose());
-        double targetRPM = Constants.ShooterMap.shooterMap.get(targetDist);
+        double targetRPM = Constants.SpeedConstants.passSpeed;
 
         shooterSubsystem.setVelocity(targetRPM);
         indexerSubsystem.enable();

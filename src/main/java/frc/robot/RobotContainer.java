@@ -70,7 +70,7 @@ public class RobotContainer {
             ));
         }).withTimeout(Seconds.of(2))
      );
-      NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem, ()->0.0));
+      NamedCommands.registerCommand("Shoot Command", new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, () -> Constants.ShooterMap.shooterMap.get(RobotMath.DistanceToHub(driveSubsystem.getPose()) + offset)));
       NamedCommands.registerCommand("Intake Down", intakePivotSubsystem.pivotDown().withTimeout(Seconds.of(0.01)));
       NamedCommands.registerCommand("Intake Start", intakeSubsystem.intake().withTimeout(Seconds.of(5)));
       NamedCommands.registerCommand("Intake Stop", intakeSubsystem.stop().withTimeout(Seconds.of(0.01)));
@@ -131,13 +131,14 @@ public class RobotContainer {
 
     shooterSubsystem.setDefaultCommand(shooterSubsystem.defaultCommand());
     indexerSubsystem.setDefaultCommand(Commands.run(()->{indexerSubsystem.push();}, indexerSubsystem));
-    m_operatorController.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem, ()->offset));
+    m_operatorController.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, () -> Constants.ShooterMap.shooterMap.get(RobotMath.DistanceToHub(driveSubsystem.getPose())) + offset));
     m_operatorController.a().whileTrue(new PassCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, driveSubsystem));
 
     new Trigger(() -> m_operatorController.getRightY() < -0.5)
       .whileTrue(Commands.run(() -> {
         offset -= 0.2; 
       }));
+      
 
       new Trigger(() -> m_operatorController.getRightY() > 0.5)
       .whileTrue(Commands.run(() -> {

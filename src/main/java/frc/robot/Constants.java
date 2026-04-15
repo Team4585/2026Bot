@@ -86,6 +86,8 @@ public final class Constants {
     public static double indexSpeed = 0.3;
     public static double indexPushSpeed = -0.1;
     public static double beltFloorSpeed = 0.6;
+
+    public static double passSpeed = 4000;
   }
 
   //in pounds

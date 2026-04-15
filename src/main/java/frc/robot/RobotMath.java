@@ -63,12 +63,6 @@ public class RobotMath {
         return OutpostPosition;
     }
 
-     public static double DistanceToOutpost(Pose2d currentPose){
-        Translation2d OutpostPosition = getOutpostPosition();
-        double staticDistance = Math.sqrt(Math.pow((OutpostPosition.getX() - currentPose.getX()), 2) + Math.pow((OutpostPosition.getY() - currentPose.getY()), 2));
-        return staticDistance;
-    }
-
     public static Rotation2d AbsoluteAngleToHub(Pose2d currentPose){
         Rotation2d targetAngle = getHubPosition().minus(currentPose.getTranslation()).getAngle();
         return targetAngle;
