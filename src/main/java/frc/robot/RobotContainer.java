@@ -147,7 +147,11 @@ public class RobotContainer {
       m_operatorController.rightStick().onTrue(Commands.run(()->{offset = 0;}));
 
       beltFloorSubsystem.setDefaultCommand(Commands.run(()->{beltFloorSubsystem.stop();}, beltFloorSubsystem));
-  }
+
+      m_operatorController.b().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, ()->Constants.SpeedConstants.towerSpeed));
+      m_operatorController.y().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, ()->Constants.SpeedConstants.trenchSpeed));
+      m_operatorController.x().whileTrue(new ShootCommand(shooterSubsystem, indexerSubsystem, beltFloorSubsystem, ()->Constants.SpeedConstants.hubSpeed));
+    }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();

@@ -40,7 +40,7 @@ public final class Constants {
   }
 
   public static class PIDFFControllers{
-    public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
+    public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(5), new PIDConstants(2));
     public static class intakePivotPID{
       public static final double kP = 1;
       public static final double kI = 0;
@@ -88,6 +88,9 @@ public final class Constants {
     public static double beltFloorSpeed = 0.3;
 
     public static double passSpeed = 4000;
+    public static double towerSpeed = 3000;
+    public static double trenchSpeed = 3300;
+    public static double hubSpeed = 2600;
   }
 
   //in pounds

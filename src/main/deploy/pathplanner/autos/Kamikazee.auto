@@ -5,25 +5,25 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "Intake Down"
+          }
+        },
+        {
+          "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Kamikazee"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "Intake Start"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Down"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Neutral Sweep"
                 }
               }
             ]
@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Stop"
+            "name": "Orient To Hub"
           }
         }
       ]

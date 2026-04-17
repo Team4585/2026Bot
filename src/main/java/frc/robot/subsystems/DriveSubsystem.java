@@ -80,7 +80,6 @@ public class DriveSubsystem extends SubsystemBase {
    ll4_attached = true;
     }
     catch(Exception e){
-      System.out.println("Limelight 4 not found.");
       ll4_attached = false;
     }
 
@@ -92,7 +91,6 @@ public class DriveSubsystem extends SubsystemBase {
    ll3a_attached = true;
     }
     catch(Exception e){
-      System.out.println("Limelight 3A not found");
       ll3a_attached = false;
     }
       
