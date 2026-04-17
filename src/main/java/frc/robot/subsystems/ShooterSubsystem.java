@@ -40,14 +40,14 @@ public class ShooterSubsystem extends SubsystemBase{
         .withIdleMode(MotorMode.COAST)
         .withStatorCurrentLimit(Amps.of(150))
         .withSupplyCurrentLimit(Amps.of(40))
-        .withClosedLoopRampRate(Seconds.of(0.25))
-        .withOpenLoopRampRate(Seconds.of(0.25));
+        .withClosedLoopRampRate(Seconds.of(0.4))
+        .withOpenLoopRampRate(Seconds.of(0.4));
 
     private SmartMotorController talonFX = new TalonFXWrapper(motor1, DCMotor.getKrakenX60(2), motorConfig);
   
     private final FlyWheelConfig shooterConfig = new FlyWheelConfig(talonFX)
     .withDiameter(Inches.of(4))
-    .withUpperSoftLimit(RPM.of(6000))
+    .withUpperSoftLimit(RPM.of(5500))
     .withMass(Pounds.of(Constants.shooterWeight));
     private FlyWheel shooter = new FlyWheel(shooterConfig);
 
@@ -71,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase{
     public Command defaultCommand(){
       return Commands.run(()->{
         if(RobotMath.activeLater() || RobotMath.hubActive()){
-          shooter.setMechanismVelocitySetpoint(RPM.of(1000));
+          shooter.setMechanismVelocitySetpoint(RPM.of(1500));
         }
         else{
           shooter.setMechanismVelocitySetpoint(RPM.of(500));

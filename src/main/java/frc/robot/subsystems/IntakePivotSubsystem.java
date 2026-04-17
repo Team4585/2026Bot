@@ -39,20 +39,20 @@ public class IntakePivotSubsystem extends SubsystemBase{
       .withSimFeedforward(new ArmFeedforward(0.25, 0, 0.25))
       .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
       .withGearing(60)
-      .withMotorInverted(true)
+      .withMotorInverted(false)
       .withIdleMode(MotorMode.BRAKE)
       .withStatorCurrentLimit(Amps.of(20))
       .withExternalEncoder(encoder)
       .withExternalEncoderZeroOffset(encoderOffset) 
       .withUseExternalFeedbackEncoder(true)
-      .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(true)));
+      .withVendorConfig(new SparkMaxConfig().apply(new AbsoluteEncoderConfig().zeroCentered(false)));
 
   private SmartMotorController motorController = new SparkWrapper(sparkMax, DCMotor.getNeoVortex(1), motorConfig);
 
 
   private ArmConfig pivotConfig = new ArmConfig(motorController)
-      .withHardLimit(Degrees.of(-50), Degrees.of(70))
-      .withSoftLimits(Degrees.of(-40), Degrees.of(60))
+      // .withHardLimit(Degrees.of(-50), Degrees.of(70))
+      // .withSoftLimits(Degrees.of(-40), Degrees.of(60))
       .withLength(Feet.of(0.8333))
       .withMass(Pounds.of(10));
 

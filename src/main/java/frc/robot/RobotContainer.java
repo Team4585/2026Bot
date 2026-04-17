@@ -47,9 +47,9 @@ public class RobotContainer {
       new CommandXboxController(Constants.OperatorConstants.kOperatorControllerPort);
 
     SwerveInputStream driveStream = SwerveInputStream.of(driveSubsystem.getSwerveDrive(),
-                                                                () -> -1 * m_driverController.getLeftY(),
-                                                                () -> -1 * m_driverController.getLeftX())
-                                                            .withControllerRotationAxis(m_driverController::getRightX)
+                                                                () -> 1 * m_driverController.getLeftY(),
+                                                                () -> 1 * m_driverController.getLeftX())
+                                                            .withControllerRotationAxis(()-> -1* m_driverController.getRightX())
                                                             .deadband(OperatorConstants.deadband)
                                                             .scaleTranslation(1)
                                                             .allianceRelativeControl(true);
@@ -123,8 +123,8 @@ public class RobotContainer {
                                                                 () -> 0.75 * m_driverController.getLeftX() * m_driverController.getLeftX() * m_driverController.getLeftX() + 0.25 * m_driverController.getLeftX()));
                                                 
     //operator bindings
-    m_operatorController.pov(0).onTrue(intakePivotSubsystem.pivotDown());    
-    m_operatorController.pov(180).onTrue(intakePivotSubsystem.pivotUp());                                                      
+    m_operatorController.pov(180).onTrue(intakePivotSubsystem.pivotDown());    
+    m_operatorController.pov(0).onTrue(intakePivotSubsystem.pivotUp());                                                      
   
     m_operatorController.leftTrigger().whileTrue(intakeSubsystem.intake());
     intakeSubsystem.setDefaultCommand(intakeSubsystem.stop());

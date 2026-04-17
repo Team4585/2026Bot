@@ -66,7 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
     swerveDrive.synchronizeModuleEncoders();
     swerveDrive.setModuleStateOptimization(true);
-    swerveDrive.setCosineCompensator(true);
+    swerveDrive.setCosineCompensator(false);
     swerveDrive.setHeadingCorrection(false);
 
     if(RobotBase.isSimulation()) swerveDrive.resetOdometry(new Pose2d(4, 4, new Rotation2d(0)));

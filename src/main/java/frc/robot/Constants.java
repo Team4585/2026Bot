@@ -42,19 +42,19 @@ public final class Constants {
   public static class PIDFFControllers{
     public static final PPHolonomicDriveController autoPID = new PPHolonomicDriveController(new PIDConstants(0.0020645), new PIDConstants(0.006, 0, 0.001));
     public static class intakePivotPID{
-      public static final double kP = 3.2;
+      public static final double kP = 1;
       public static final double kI = 0;
-      public static final double kD = 0.8;
+      public static final double kD = 0.4;
     }
     public static final ArmFeedforward intakePivotFF = new ArmFeedforward(0.06, 0.18, 0);
 
     public static class shooterPID{
-      public static final double kP = 0.06;
+      public static final double kP = 4;
       public static final double kI = 0;
-      public static final double kD = 0.12;
+      public static final double kD = 0.1;
     }
 
-    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.67, 0.03, 0.05);
+    public static final SimpleMotorFeedforward shooterFF = new SimpleMotorFeedforward(0.2, 0.112, 0.0);
   }
 
   public static class CANids{
@@ -69,23 +69,23 @@ public final class Constants {
 
   public static class SetpointConstants{
     public static class IntakePivotSetpoints{
-      public static Angle UpPos = Degrees.of(-35);
-      public static Angle DownPos = Degrees.of(74);
+      public static Angle UpPos = Degrees.of(254);
+      public static Angle DownPos = Degrees.of(150);
     }
   }
-
+ 
   public static class OffsetConstants{
-    public static double intakePivotEncoderOffset = 0.65;
+    public static double intakePivotEncoderOffset = 0.471;
     public static double shooterXOffset = 0.1;
     public static double shooterYOffset = 0.0;
   }
 
   public static class SpeedConstants{
-    public static double intakeSpeed = -0.6;
-    public static double outtakeSpeed = 0.8;
+    public static double intakeSpeed = 0.4;
+    public static double outtakeSpeed = -0.3;
     public static double indexSpeed = 0.3;
     public static double indexPushSpeed = -0.1;
-    public static double beltFloorSpeed = 0.6;
+    public static double beltFloorSpeed = 0.3;
 
     public static double passSpeed = 4000;
   }
