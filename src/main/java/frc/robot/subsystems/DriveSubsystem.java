@@ -156,7 +156,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   //drive related commands
   public void driveRobotOriented(ChassisSpeeds speeds){
-      swerveDrive.drive(speeds);
+      swerveDrive.drive(new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond));
   }
 
     public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity){
@@ -226,10 +226,9 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
-  public Command pointToHeading(DoubleSupplier TranslationY, DoubleSupplier TranslationX){
+  public Command driveV(DoubleSupplier TranslationY, DoubleSupplier TranslationX, DoubleSupplier heading){
     return run(()->{
-      double targetHeading = Math.atan2(TranslationY.getAsDouble(), TranslationX.getAsDouble());
-      ChassisSpeeds ptargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(-TranslationY.getAsDouble(), -TranslationX.getAsDouble(), -Math.cos(targetHeading), -Math.sin(targetHeading), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
+      ChassisSpeeds ptargetSpeeds = swerveDrive.swerveController.getTargetSpeeds(TranslationY.getAsDouble(), TranslationX.getAsDouble(), heading.getAsDouble(), swerveDrive.getOdometryHeading().getRadians(),swerveDrive.getMaximumChassisVelocity());
       swerveDrive.driveFieldOriented(ptargetSpeeds);
     });
   }

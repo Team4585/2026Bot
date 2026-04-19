@@ -83,7 +83,7 @@ public final class Constants {
   public static class SpeedConstants{
     public static double intakeSpeed = 0.4;
     public static double outtakeSpeed = -0.3;
-    public static double indexSpeed = 0.3;
+    public static double indexSpeed = -0.3;
     public static double indexPushSpeed = -0.1;
     public static double beltFloorSpeed = 0.3;
 
